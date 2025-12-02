@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edu Revolution - LPU</title>
+    <link rel="icon" href="edurev1.png" list="disc">
+    <!-- 1. Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. Google Font (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- 3. Lucide Icons -->
+    <script src="https://unpkg.com/lucide-react@latest/dist/lucide.umd.js"></script>
+
+    <!-- 4. Custom Tailwind Config & Global Styles -->
+    <style type="text/tailwindcss">
+        @layer base {
+            html {
+                font-family: 'Inter', sans-serif;
+            }
+            body {
+                @apply bg-gray-950 text-gray-300;
+            }
+            /* Custom scrollbar for a futuristic feel */
+            ::-webkit-scrollbar {
+                @apply w-2;
+            }
+            ::-webkit-scrollbar-track {
+                @apply bg-gray-900;
+            }
+            ::-webkit-scrollbar-thumb {
+                @apply bg-indigo-500 rounded-full;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                @apply bg-indigo-400;
+            }
+        }
+        @layer components {
+            /* Glassmorphism Card Component */
+            .glass-card {
+                @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 shadow-2xl;
+            }
+            /* Neon Glow Button (Primary) */
+            .btn-primary {
+                @apply bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg shadow-indigo-500/30 hover:shadow-2xl hover:shadow-indigo-500/50 hover:bg-indigo-500 hover:-translate-y-0.5 transform;
+            }
+            /* Neon Glow Button (Secondary) */
+            .btn-secondary {
+                @apply bg-fuchsia-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg shadow-fuchsia-500/30 hover:shadow-2xl hover:shadow-fuchsia-500/50 hover:bg-fuchsia-500 hover:-translate-y-0.5 transform;
+            }
+            /* Input Field Style */
+            .form-input {
+                @apply w-full bg-white/10 border border-white/20 rounded-lg py-3 px-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all;
+            }
+            /* Section Title */
+            .section-title {
+                @apply text-4xl font-bold text-white mb-4 text-center;
+            }
+            .section-subtitle {
+                @apply text-lg text-indigo-300 mb-12 text-center max-w-2xl mx-auto;
+            }
+            
+            /* Pie Chart Component */
+            .pie-chart {
+                @apply w-32 h-32 rounded-full flex items-center justify-center relative;
+                /* Use CSS var for dynamic progress */
+                background: conic-gradient(
+                    theme('colors.green.400') 0deg var(--progress-deg), 
+                    theme('colors.white.10') var(--progress-deg) 360deg
+                );
+                transition: --progress-deg 0.5s ease-out;
+            }
+            .pie-chart::before {
+                /* This creates the "hole" in the donut chart */
+                content: '';
+                @apply absolute w-24 h-24 bg-gray-900 rounded-full;
+            }
+            .pie-chart-text {
+                @apply z-10 text-center;
+            }
+
+            /* Add hover animation to quick-access icons */
+            .glass-card:hover .quick-access-icon {
+                @apply scale-110 rotate-[-10deg];
+            }
+            /* Add hover animation to about icons */
+            .glass-card:hover .about-icon {
+                @apply scale-110 -translate-y-1;
+            }
+            
+            /* NEW: Logo Ticker styles */
+            .logo-ticker {
+                @apply w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)];
+            }
+            .logo-ticker-track {
+                @apply flex items-center justify-center;
+                animation: scroll 40s linear infinite;
+            }
+            .logo-ticker img {
+                @apply h-12 w-auto object-contain mx-10 grayscale opacity-60 transition-all duration-300;
+            }
+            .logo-ticker:hover img {
+                @apply grayscale-0 opacity-100;
+            }
+            .logo-ticker:hover .logo-ticker-track {
+                animation-play-state: paused;
+            }
+        }
+        @layer utilities {
+            /* Custom animation for hero text */
+            .fade-in-up {
+                animation: fadeInUp 0.8s ease-out forwards;
+                opacity: 0;
+            }
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            /* Custom animation for chatbot pulse */
+            .pulse-neon {
+                animation: pulseNeon 2s infinite;
+            }
+            @keyframes pulseNeon {
+                0%, 100% {
+                    box-shadow: 0 0 10px theme('colors.indigo.500'), 0 0 20px theme('colors.indigo.500');
+                }
+                50% {
+                    box-shadow: 0 0 20px theme('colors.indigo.400'), 0 0 40px theme('colors.indigo.400');
+                }
+            }
+            
+            /* Shine Animation */
+            .gradient-shine {
+                position: relative;
+                overflow: hidden;
+            }
+            .gradient-shine::after {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: linear-gradient(to right, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 60%);
+                transform: rotate(25deg);
+                /* Start animation off-screen */
+                animation: gradientShine 5s ease-in-out infinite;
+                animation-delay: 2s; /* Start after initial fade-in */
+            }
+            @keyframes gradientShine {
+                0% { 
+                    transform: translateX(-75%) translateY(-25%) rotate(25deg); 
+                }
+                100% { 
+                    transform: translateX(50%) translateY(-25%) rotate(25deg); 
+                }
+            }
+            
+            /* NEW: Logo Ticker Animation */
+            @keyframes scroll {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+            }
+        }
+    </style>
+</head>
+<body class="relative min-h-screen">
+
+    <!-- ===== Header / Navigation ===== -->
+    <header class="sticky top-0 z-50 bg-gray-950/80 backdrop-blur-lg border-b border-white/10">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-20">
+            <!-- Improved Logo -->
+            <a href="#" class="flex items-center space-x-2">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7l10 5 10-5L12 2z" class="text-indigo-400" fill="currentColor"/>
+                    <path d="M2 12l10 5 10-5" stroke-width="2" class="text-indigo-500" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6 10v4l6 3v-4l-6-3z" class="text-fuchsia-500" fill="currentColor" opacity="0.8"/>
+                    <path d="M18 10v4l-6 3v-4l6-3z" class="text-fuchsia-500" fill="currentColor" opacity="0.8"/>
+                </svg>
+                <span class="text-2xl font-bold text-white">Edu Revolution</span>
+            </a>
+
+            <!-- Ranking Badges -->
+            <div class="hidden lg:flex items-center space-x-4">
+                <div class="flex items-center space-x-2 bg-green-500/10 border border-green-500 rounded-full px-4 py-1.5">
+                    <i data-lucide="award" class="w-5 h-5 text-green-400"></i>
+                    <span class="text-sm font-semibold text-green-300">NAAC A++ University</span>
+                </div>
+                <!-- NEW QS RANK BADGE -->
+                <div class="flex items-center space-x-2 bg-blue-500/10 border border-blue-500 rounded-full px-4 py-1.5">
+                    <i data-lucide="globe" class="w-5 h-5 text-blue-400"></i>
+                    <span class="text-sm font-semibold text-blue-300">QS World Ranked</span>
+                </div>
+            </div>
+
+            <!-- Desktop Nav Links -->
+            <div class="hidden lg:flex items-center space-x-6">
+                <a href="#home" class="text-gray-300 hover:text-indigo-400 transition-colors">Home</a>
+                <a href="#about" class="text-gray-300 hover:text-indigo-400 transition-colors">About</a>
+                <a href="#courses" class="text-gray-300 hover:text-indigo-400 transition-colors">Courses</a>
+                <a href="#certifications" class="text-gray-300 hover:text-indigo-400 transition-colors">Certifications</a>
+                <!-- NEW LINKS -->
+                <a href="#success-stories" class="text-gray-300 hover:text-indigo-400 transition-colors">Success</a>
+                <a href="#partners" class="text-gray-300 hover:text-indigo-400 transition-colors">Partners</a>
+                <a href="#feedback" class="text-gray-300 hover:text-indigo-400 transition-colors">Feedback</a>
+                <a href="#register" class="btn-primary !py-2 !px-5">Register Now</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="lg:hidden">
+                <i data-lucide="menu" class="w-6 h-6 text-white"></i>
+            </button>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden absolute top-20 left-0 w-full bg-gray-900 shadow-2xl z-40">
+            <div class="flex flex-col space-y-4 p-5">
+                <a href="#home" class="text-gray-300 hover:text-indigo-400">Home</a>
+                <a href="#about" class="text-gray-300 hover:text-indigo-400">About</a>
+                <a href="#courses" class="text-gray-300 hover:text-indigo-400">Courses</a>
+                <a href="#certifications" class="text-gray-300 hover:text-indigo-400">Certifications</a>
+                <!-- NEW LINKS -->
+                <a href="#success-stories" class="text-gray-300 hover:text-indigo-400">Success Stories</a>
+                <a href="#partners" class="text-gray-300 hover:text-indigo-400">Partners</a>
+                <a href="#feedback" class="text-gray-300 hover:text-indigo-400">Feedback</a>
+                <!-- Ranking Badges in Mobile -->
+                <div class="!mt-4 bg-green-500/10 border border-green-500 rounded-lg px-4 py-2 flex items-center justify-center space-x-2">
+                    <i data-lucide="award" class="w-5 h-5 text-green-400"></i>
+                    <span class="text-sm font-semibold text-green-300">NAAC A++</span>
+                </div>
+                <div class="!mt-2 bg-blue-500/10 border border-blue-500 rounded-lg px-4 py-2 flex items-center justify-center space-x-2">
+                    <i data-lucide="globe" class="w-5 h-5 text-blue-400"></i>
+                    <span class="text-sm font-semibold text-blue-300">QS World Ranked</span>
+                </div>
+                <a href="#register" class="btn-primary !py-3 !px-5 w-full text-center mt-4">Register Now</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== Main Content ===== -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+
+        <!-- ===== Home / Hero Section ===== -->
+        <section id="home" class="text-center py-24">
+            <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-6">
+                <span class="fade-in-up" style="animation-delay: 100ms;">Empowering</span>
+                <span class="fade-in-up" style="animation-delay: 300ms;">Education</span>
+                <span class="fade-in-up" style="animation-delay: 500ms;">through</span>
+                <!-- Added gradient-shine class for animation -->
+                <span class="fade-in-up bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-fuchsia-500 gradient-shine" style="animation-delay: 700ms;">Innovation.</span>
+            </h1>
+            <p class="text-xl text-gray-400 max-w-3xl mx-auto mb-10 fade-in-up" style="animation-delay: 900ms;">
+                Welcome to Edu Revolution, LPU's next-generation portal for a seamless, interactive, and futuristic academic experience.
+            </p>
+            <div class="flex justify-center space-x-4 fade-in-up" style="animation-delay: 1100ms;">
+                <a href="#register" class="btn-primary">Get Started</a>
+                <a href="#about" class="btn-secondary">Learn More</a>
+            </div>
+        </section>
+        
+        <!-- ===== Dashboard / Quick Access ===== -->
+        <section id="dashboard" class="py-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Dashboard Card 1 -->
+                <a href="#courses" class="glass-card p-6 flex items-center space-x-4 hover:border-indigo-500/50 hover:-translate-y-1 transition-all duration-300">
+                    <div class="p-3 bg-indigo-500/20 rounded-full">
+                        <!-- Added animation classes -->
+                        <i data-lucide="library" class="w-6 h-6 text-indigo-400 quick-access-icon transition-transform duration-300"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-white">My Courses</h3>
+                        <p class="text-gray-400">View enrolled subjects</p>
+                    </div>
+                </a>
+                <!-- Dashboard Card 2 -->
+                <a href="#leave" class="glass-card p-6 flex items-center space-x-4 hover:border-fuchsia-500/50 hover:-translate-y-1 transition-all duration-300">
+                    <div class="p-3 bg-fuchsia-500/20 rounded-full">
+                        <!-- Added animation classes -->
+                        <i data-lucide="calendar-check" class="w-6 h-6 text-fuchsia-400 quick-access-icon transition-transform duration-300"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-white">Duty Leave</h3>
+                        <p class="text-gray-400">Apply & track leave</p>
+                    </div>
+                </a>
+                <!-- Dashboard Card 3 -->
+                <a href="#tickets" class="glass-card p-6 flex items-center space-x-4 hover:border-indigo-500/50 hover:-translate-y-1 transition-all duration-300">
+                    <div class="p-3 bg-indigo-500/20 rounded-full">
+                        <!-- Added animation classes -->
+                        <i data-lucide="life-buoy" class="w-6 h-6 text-indigo-400 quick-access-icon transition-transform duration-300"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-white">Support Tickets</h3>
+                        <p class="text-gray-400">Raise & check status</p>
+                    </div>
+                </a>
+                <!-- Dashboard Card 4 -->
+                <a href="#referral" class="glass-card p-6 flex items-center space-x-4 hover:border-fuchsia-500/50 hover:-translate-y-1 transition-all duration-300">
+                    <div class="p-3 bg-fuchsia-500/20 rounded-full">
+                        <!-- Added animation classes -->
+                        <i data-lucide="gift" class="w-6 h-6 text-fuchsia-400 quick-access-icon transition-transform duration-300"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-white">Referral Program</h3>
+                        <p class="text-gray-400">Earn rewards</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- ===== Why Edu Revolution? (About) ===== -->
+        <section id="about" class="py-16">
+            <h2 class="section-title">Why Edu Revolution?</h2>
+            <p class="section-subtitle">
+                This platform isn't just a portal; it's a paradigm shift. We've integrated all academic and co-curricular activities into one intelligent, responsive, and intuitive ecosystem.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="glass-card text-center items-center flex flex-col">
+                    <div class="p-4 bg-indigo-500/20 rounded-full mb-4 inline-block">
+                        <!-- Added animation classes -->
+                        <i data-lucide="orbit" class="w-10 h-10 text-indigo-400 about-icon transition-transform duration-300"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-white mb-2">Unified Ecosystem</h3>
+                    <p class="text-gray-400">
+                        From core courses and duty leave to hackathons and support tickets, everything is in one place. No more juggling multiple websites.
+                    </p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="glass-card text-center items-center flex flex-col">
+                    <div class="p-4 bg-fuchsia-500/20 rounded-full mb-4 inline-block">
+                        <!-- Added animation classes -->
+                        <i data-lucide="smartphone" class="w-10 h-10 text-fuchsia-400 about-icon transition-transform duration-300"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-white mb-2">Fully Responsive</h3>
+                    <p class="text-gray-400">
+                        Access your academic world anytime, anywhere. Our platform is beautifully designed for desktop, tablet, and mobile devices.
+                    </p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="glass-card text-center items-center flex flex-col">
+                    <div class="p-4 bg-indigo-500/20 rounded-full mb-4 inline-block">
+                        <!-- Added animation classes -->
+                        <i data-lucide="zap" class="w-10 h-10 text-indigo-400 about-icon transition-transform duration-300"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-white mb-2">AI-Powered Assistance</h3>
+                    <p class="text-gray-400">
+                        Get instant answers to your common questions about attendance, courses, and ticket statuses with our integrated AI Assistant.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Core & Non-Core Courses ===== -->
+        <section id="courses" class="py-16">
+            <h2 class="section-title">My Courses</h2>
+            <p class="section-subtitle">
+                Manage your academic progress. Enroll in new non-core subjects and track your core course performance.
+            </p>
+            
+            <!-- Course Grids -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Core Courses -->
+                <div>
+                    <h3 class="text-3xl font-semibold text-white mb-6">Core Courses</h3>
+                    <div id="core-courses-grid" class="space-y-6">
+                        <!-- JS will populate this -->
+                    </div>
+                </div>
+                
+                <!-- Non-Core Courses -->
+                <div>
+                    <h3 class="text-3xl font-semibold text-white mb-6">Available Non-Core Courses</h3>
+                    <div id="non-core-courses-grid" class="space-y-6">
+                        <!-- JS will populate this -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Extra-Curricular Activities ===== -->
+        <section id="activities" class="py-16">
+            <h2 class="section-title">Extra-Curricular Activities</h2>
+            <p class="section-subtitle">
+                University life is more than academics. Join clubs, participate in events, and build your profile.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Activity Card 1 -->
+                <div class="glass-card overflow-hidden">
+                    <img src="https://placehold.co/600x400/1e1b4b/93c5fd?text=Hackathon" alt="Hackathon" class="w-full h-40 object-cover">
+                    <div class="p-5">
+                        <h3 class="text-xl font-semibold text-white mb-2">Innovatech Hackathon</h3>
+                        <p class="text-gray-400 mb-4 text-sm">Join 48 hours of intense coding, innovation, and collaboration. Prizes worth $5,000!</p>
+                        <button class="btn-primary w-full !py-2">Join Now</button>
+                    </div>
+                </div>
+                <!-- Activity Card 2 -->
+                <div class="glass-card overflow-hidden">
+                    <img src="https://placehold.co/600x400/4a044e/f0abfc?text=Cultural+Fest" alt="Cultural Fest" class="w-full h-40 object-cover">
+                    <div class="p-5">
+                        <h3 class="text-xl font-semibold text-white mb-2">Spectra Cultural Fest</h3>
+                        <p class="text-gray-400 mb-4 text-sm">The annual celebration of art, music, and dance. Auditions open for drama and singing.</p>
+                        <button class="btn-secondary w-full !py-2">Learn More</button>
+                    </div>
+                </div>
+                <!-- Activity Card 3 -->
+                <div class="glass-card overflow-hidden">
+                    <img src="https://placehold.co/600x400/0c4a6e/bae6fd?text=AI+Club" alt="AI Club" class="w-full h-40 object-cover">
+                    <div class="p-5">
+                        <h3 class="text-xl font-semibold text-white mb-2">LPU AI Club</h3>
+                        <p class="text-gray-400 mb-4 text-sm">Weekly workshops on machine learning, deep learning, and data science projects.</p>
+                        <button class="btn-primary w-full !py-2">Join Club</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Certifications Section ===== -->
+        <section id="certifications" class="py-16">
+            <h2 class="section-title">My Certifications</h2>
+            <p class="section-subtitle">
+                Keep a digital portfolio of your achievements. Add new certifications to showcase your skills.
+            </p>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Upload Form -->
+                <div class="lg:col-span-1">
+                    <form id="cert-form" class="glass-card p-6 space-y-4">
+                        <h3 class="text-2xl font-semibold text-white mb-4">Add New Certification</h3>
+                        <div>
+                            <label for="cert-title" class="block text-sm font-medium text-gray-300 mb-1">Certification Title</label>
+                            <input type="text" id="cert-title" class="form-input" placeholder="e.g., AWS Cloud Practitioner" required>
+                        </div>
+                        <div>
+                            <label for="cert-issuer" class="block text-sm font-medium text-gray-300 mb-1">Issuing Organization</label>
+                            <input type="text" id="cert-issuer" class="form-input" placeholder="e.g., Amazon Web Services" required>
+                        </div>
+                        <div>
+                            <label for="cert-file" class="block text-sm font-medium text-gray-300 mb-1">Upload (Simulated)</label>
+                            <input type="file" id="cert-file" class="form-input file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer">
+                            <p class="text-xs text-gray-500 mt-1">Note: This is a demo. No file will be actually uploaded.</p>
+                        </div>
+                        <button type="submit" class="btn-primary w-full">Add Certification</button>
+                    </form>
+                </div>
+                <!-- Certificate List -->
+                <div class="lg:col-span-2">
+                    <div id="cert-list" class="space-y-4">
+                        <!-- JS will populate this -->
+                        <div class="glass-card p-4 text-center text-gray-400">
+                            Your added certifications will appear here.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Testimonials Section (Redesigned) ===== -->
+        <section id="testimonials" class="py-16">
+            <h2 class="section-title">What Students Say</h2>
+            <p class="section-subtitle">
+                Direct feedback from students who are using the Edu Revolution platform.
+            </p>
+            <!-- Testimonial Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Testimonial 1 -->
+                <div class="glass-card flex flex-col items-center text-center transition-all duration-300 hover:border-indigo-500/50 hover:-translate-y-1">
+                    <img src="https://placehold.co/80x80/a78bfa/1e1b4b?text=AS" alt="Student" class="w-20 h-20 rounded-full border-4 border-indigo-400 mb-4">
+                    <h4 class="text-lg font-semibold text-white">Ananya Sharma</h4>
+                    <p class="text-sm text-indigo-300 mb-3">B.Tech CSE, 3rd Year</p>
+                    <div class="flex text-yellow-400 mb-4">
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                    </div>
+                    <p class="text-gray-300 italic text-sm">"The new portal is a game-changer. Being able to track my courses, apply for leave, and even see my support tickets in one dashboard is incredibly efficient. The AI assistant actually helps!"</p>
+                </div>
+                <!-- Testimonial 2 -->
+                <div class="glass-card flex flex-col items-center text-center transition-all duration-300 hover:border-fuchsia-500/50 hover:-translate-y-1">
+                    <img src="https://placehold.co/80x80/f472b6/1e1b4b?text=RV" alt="Student" class="w-20 h-20 rounded-full border-4 border-fuchsia-400 mb-4">
+                    <h4 class="text-lg font-semibold text-white">Rohan Verma</h4>
+                    <p class="text-sm text-fuchsia-300 mb-3">BBA, 2nd Year</p>
+                    <div class="flex text-yellow-400 mb-4">
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star-half" class="w-5 h-5 fill-current"></i>
+                    </div>
+                    <p class="text-gray-300 italic text-sm">"I love the design! It feels so modern and futuristic. The referral program is a nice touch, and I've already recommended it to my friends. It's just... smooth."</p>
+                </div>
+                <!-- Testimonial 3 -->
+                <div class="glass-card flex flex-col items-center text-center transition-all duration-300 hover:border-blue-500/50 hover:-translate-y-1">
+                    <img src="https://placehold.co/80x80/60a5fa/1e1b4b?text=PS" alt="Student" class="w-20 h-20 rounded-full border-4 border-blue-400 mb-4">
+                    <h4 class="text-lg font-semibold text-white">Priya Singh</h4>
+                    <p class="text-sm text-blue-300 mb-3">M.Sc. Biotechnology</p>
+                    <div class="flex text-yellow-400 mb-4">
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                    </div>
+                    <p class="text-gray-300 italic text-sm">"The certification portfolio is my favorite new feature. I can finally keep all my professional achievements in one place tied to my student account. The activities section is also great for finding new clubs."</p>
+                </div>
+                 <!-- Testimonial 4 -->
+                <div class="glass-card flex flex-col items-center text-center transition-all duration-300 hover:border-yellow-500/50 hover:-translate-y-1">
+                    <img src="https://placehold.co/80x80/facc15/1e1b4b?text=MK" alt="Student" class="w-20 h-20 rounded-full border-4 border-yellow-400 mb-4">
+                    <h4 class="text-lg font-semibold text-white">Manpreet Kaur</h4>
+                    <p class="text-sm text-yellow-300 mb-3">B.A. Journalism</p>
+                    <div class="flex text-yellow-400 mb-4">
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                    </div>
+                    <p class="text-gray-300 italic text-sm">"It's so much better on mobile than the old system. I raised a support ticket from my phone, and the status tracker is very clear. It just works."</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- ===== NEW: Student Success Stories ===== -->
+        <section id="success-stories" class="py-16">
+            <h2 class="section-title">Student Success Stories</h2>
+            <p class="section-subtitle">
+                See where Edu Revolution and LPU's ecosystem can take you.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Success Story 1 -->
+                <div class="glass-card flex flex-col transition-all duration-300 hover:border-indigo-500/50 hover:-translate-y-1">
+                    <div class="flex items-center mb-4">
+                        <img src="https://placehold.co/60x60/a78bfa/1e1b4b?text=RK" alt="Student" class="w-14 h-14 rounded-full border-2 border-indigo-400">
+                        <div class="ml-4">
+                            <h4 class="text-lg font-semibold text-white">Raj Kumar</h4>
+                            <p class="text-sm text-indigo-300">B.Tech CSE (2024 Batch)</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 italic text-sm mb-5">"The 'Hackathons' and 'Certifications' sections were my gateway. I built a portfolio right here on the portal, which directly led to my pre-placement offer at Google."</p>
+                    <div class="mt-auto pt-4 border-t border-white/10 flex items-center space-x-2">
+                        <span class="text-sm text-gray-400">Placed at:</span>
+                        <img src="https://placehold.co/100x30/ffffff/000000?text=Google" alt="Google Logo" class="h-6 w-auto">
+                    </div>
+                </div>
+                <!-- Success Story 2 -->
+                <div class="glass-card flex flex-col transition-all duration-300 hover:border-fuchsia-500/50 hover:-translate-y-1">
+                    <div class="flex items-center mb-4">
+                        <img src="https://placehold.co/60x60/f472b6/1e1b4b?text=SA" alt="Student" class="w-14 h-14 rounded-full border-2 border-fuchsia-400">
+                        <div class="ml-4">
+                            <h4 class="text-lg font-semibold text-white">Sneha Agarwal</h4>
+                            <p class="text-sm text-fuchsia-300">BBA (2024 Batch)</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 italic text-sm mb-5">"I used the 'Non-Core Courses' to take up 'Digital Marketing' and 'AI Basics'. This inter-disciplinary knowledge helped me secure a coveted role at Microsoft in their sales division."</p>
+                    <div class="mt-auto pt-4 border-t border-white/10 flex items-center space-x-2">
+                        <span class="text-sm text-gray-400">Placed at:</span>
+                        <img src="https://placehold.co/100x30/ffffff/000000?text=Microsoft" alt="Microsoft Logo" class="h-6 w-auto">
+                    </div>
+                </div>
+                <!-- Success Story 3 -->
+                <div class="glass-card flex flex-col transition-all duration-300 hover:border-blue-500/50 hover:-translate-y-1">
+                    <div class="flex items-center mb-4">
+                        <img src="https://placehold.co/60x60/60a5fa/1e1b4b?text=AM" alt="Student" class="w-14 h-14 rounded-full border-2 border-blue-400">
+                        <div class="ml-4">
+                            <h4 class="text-lg font-semibold text-white">Aarav Mehta</h4>
+                            <p class="text-sm text-blue-300">B.Tech ECE (2025 Batch)</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 italic text-sm mb-5">"Through an 'Activity' post, I joined the LPU AI Club. We built a project that won a national competition, and I landed a research internship at Infosys, all tracked via this portal."</p>
+                    <div class="mt-auto pt-4 border-t border-white/10 flex items-center space-x-2">
+                        <span class="text-sm text-gray-400">Internship at:</span>
+                        <img src="https://placehold.co/100x30/ffffff/000000?text=Infosys" alt="Infosys Logo" class="h-6 w-auto">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== NEW: Sponsors & Partners Section ===== -->
+        <section id="partners" class="py-16">
+            <h2 class="section-title">Our Partners & Collaborators</h2>
+            <p class="section-subtitle">
+                We are proud to be associated with industry giants and leading global universities to provide our students with world-class opportunities.
+            </p>
+
+            <!-- Industry Partners Logo Ticker -->
+            <h3 class="text-3xl font-semibold text-white mb-8 text-center">Industry Giants</h3>
+            <div class="logo-ticker">
+                <div class="logo-ticker-track">
+                    <!-- Logos (set 1) -->
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=Google" alt="Google">
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=Microsoft" alt="Microsoft">
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=TCS" alt="TCS">
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=Infosys" alt="Infosys">
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=Wipro" alt="Wipro">
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=Capgemini" alt="Capgemini">
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=Amazon" alt="Amazon">
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=Cognizant" alt="Cognizant">
+                    
+                    <!-- Logos (set 2 - duplicate for seamless scroll) -->
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=Google" alt="Google">
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=Microsoft" alt="Microsoft">
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=TCS" alt="TCS">
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=Infosys" alt="Infosys">
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=Wipro" alt="Wipro">
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=Capgemini" alt="Capgemini">
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=Amazon" alt="Amazon">
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=Cognizant" alt="Cognizant">
+                </div>
+            </div>
+            
+            <!-- Global University Partners -->
+            <h3 class="text-3xl font-semibold text-white mb-8 mt-20 text-center">Global University Partners</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="glass-card flex items-center justify-center p-8 transition-all duration-300 hover:border-indigo-500/50 hover:-translate-y-1">
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=MIT" alt="MIT" class="h-10 w-auto object-contain">
+                </div>
+                <div class="glass-card flex items-center justify-center p-8 transition-all duration-300 hover:border-indigo-500/50 hover:-translate-y-1">
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=Stanford" alt="Stanford" class="h-10 w-auto object-contain">
+                </div>
+                <div class="glass-card flex items-center justify-center p-8 transition-all duration-300 hover:border-indigo-500/50 hover:-translate-y-1">
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=NUS+Singapore" alt="NUS Singapore" class="h-10 w-auto object-contain">
+                </div>
+                <div class="glass-card flex items-center justify-center p-8 transition-all duration-300 hover:border-indigo-500/50 hover:-translate-y-1">
+                    <img src="https://placehold.co/150x60/ffffff/000000?text=University+of+Illinois" alt="University of Illinois" class="h-10 w-auto object-contain">
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Management Sections (Leave, Referral, Tickets) ===== -->
+        <section id="management" class="py-16 grid grid-cols-1 lg:grid-cols-2 gap-12">
+            
+            <!-- Duty Leave & Status -->
+            <div id="leave" class="space-y-8">
+                <!-- Duty Leave Form -->
+                <div class="glass-card p-6">
+                    <h3 class="text-2xl font-semibold text-white mb-4">Duty Leave Management</h3>
+                    <form id="duty-leave-form" class="space-y-4">
+                        <div>
+                            <label for="leave-reason" class="block text-sm font-medium text-gray-300 mb-1">Reason for Leave</label>
+                            <input type="text" id="leave-reason" class="form-input" placeholder="e.g., Attending Hackathon" required>
+                        </div>
+                        <div>
+                            <label for="leave-date" class="block text-sm font-medium text-gray-300 mb-1">Date of Leave</label>
+                            <input type="date" id="leave-date" class="form-input" required>
+                        </div>
+                        <button type="submit" class="btn-primary w-full">Submit Application</button>
+                    </form>
+                    
+                    <!-- Pie Chart for Attendance -->
+                    <div class="mt-6 pt-6 border-t border-white/10 flex flex-col items-center">
+                        <h4 class="text-lg font-semibold text-white mb-4">Current Attendance</h4>
+                        <div id="attendance-pie-chart" class="pie-chart" style="--progress-deg: 0deg;">
+                            <div class="pie-chart-text">
+                                <span id="attendance-display" class="text-3xl font-bold text-white">85%</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4">Demo: Approved leave auto-adjusts attendance.</p>
+                    </div>
+                </div>
+
+                <!-- Application Status Tracker -->
+                <div id="status" class="glass-card p-6">
+                    <h3 class="text-2xl font-semibold text-white mb-6">Application Status Tracker</h3>
+                    <div class="space-y-6 relative before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-white/15">
+                        <!-- Timeline Item 1 -->
+                        <div class="flex items-start space-x-4 pl-10 relative">
+                            <div class="absolute left-0 top-2 p-1.5 bg-green-500/20 rounded-full z-10">
+                                <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-white">Duty Leave: Hackathon</h4>
+                                <p class="text-sm text-gray-400">Status: <span class="text-green-400">Approved</span> (Oct 28, 2025)</p>
+                            </div>
+                        </div>
+                        <!-- Timeline Item 2 -->
+                        <div class="flex items-start space-x-4 pl-10 relative">
+                            <div class="absolute left-0 top-2 p-1.5 bg-yellow-500/20 rounded-full z-10">
+                                <i data-lucide="loader" class="w-4 h-4 text-yellow-400 animate-spin"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-white">Non-Core: AI Ethics</h4>
+                                <p class="text-sm text-gray-400">Status: <span class="text-yellow-400">Pending Review</span> (Oct 25, 2025)</p>
+                            </div>
+                        </div>
+                        <!-- Timeline Item 3 -->
+                        <div class="flex items-start space-x-4 pl-10 relative">
+                            <div class="absolute left-0 top-2 p-1.5 bg-red-500/20 rounded-full z-10">
+                                <i data-lucide="x" class="w-4 h-4 text-red-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-white">Edu Revolution Application</h4>
+                                <p class="text-sm text-gray-400">Status: <span class="text-red-400">Rejected</span> (Incomplete) (Oct 22, 2025)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Referrals & Tickets -->
+            <div id="referral" class="space-y-8">
+                <!-- Referral Program -->
+                <div class="glass-card p-6">
+                    <h3 class="text-2xl font-semibold text-white mb-4">Student Referral Program</h3>
+                    <label for="referral-code" class="block text-sm font-medium text-gray-300 mb-1">Your Unique Referral Code</label>
+                    <div class="flex space-x-2">
+                        <input type="text" id="referral-code" value="EDUREV-A8K4F" readonly class="form-input text-indigo-300 font-mono tracking-wider">
+                        <button id="copy-referral-btn" class="btn-primary !py-3 !px-4 flex-shrink-0">
+                            <i data-lucide="copy" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="mt-6 pt-6 border-t border-white/10">
+                        <h4 class="text-lg font-semibold text-white mb-3">Your Referrals (<span id="referral-count">0</span>)</h4>
+                        <ul id="referral-list" class="space-y-2 max-h-40 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-indigo-500/50 scrollbar-track-transparent">
+                            <!-- JS will populate this -->
+                            <li class="text-gray-400">No referrals yet.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Query / Ticket System -->
+                <div id="tickets" class="glass-card p-6">
+                    <h3 class="text-2xl font-semibold text-white mb-4">Query / Ticket Resolution</h3>
+                    <form id="ticket-form" class="space-y-4">
+                        <div>
+                            <label for="ticket-subject" class="block text-sm font-medium text-gray-300 mb-1">Subject</label>
+                            <input type="text" id="ticket-subject" class="form-input" placeholder="e.g., Course Credit Mismatch" required>
+                        </div>
+                        <div>
+                            <label for="ticket-desc" class="block text-sm font-medium text-gray-300 mb-1">Description</label>
+                            <textarea id="ticket-desc" rows="3" class="form-input" placeholder="Please describe your issue..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary w-full">Submit Ticket</button>
+                    </form>
+                    
+                    <div class="mt-6 pt-6 border-t border-white/10">
+                        <h4 class="text-lg font-semibold text-white mb-3">Your Tickets</h4>
+                        <div id="ticket-list" class="space-y-3">
+                            <!-- JS will populate this -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Registration Section ===== -->
+        <section id="register" class="py-16">
+            <h2 class="section-title">Join Edu Revolution</h2>
+            <p class="section-subtitle">
+                Complete the form below to apply for the Edu Revolution program and unlock all these features.
+            </p>
+            <form id="register-form" class="glass-card max-w-3xl mx-auto p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Full Name -->
+                <div>
+                    <label for="reg-name" class="block text-sm font-medium text-gray-300 mb-1">Full Name</label>
+                    <input type="text" id="reg-name" class="form-input" placeholder="John Doe" required>
+                </div>
+                <!-- Student ID -->
+                <div>
+                    <label for="reg-id" class="block text-sm font-medium text-gray-300 mb-1">Student ID</label>
+                    <input type="number" id="reg-id" class="form-input" placeholder="12345678" required>
+                </div>
+                <!-- Email -->
+                <div>
+                    <label for="reg-email" class="block text-sm font-medium text-gray-300 mb-1">LPU Email</label>
+                    <input type="email" id="reg-email" class="form-input" placeholder="john.12345@lpu.co.in" required>
+                </div>
+                <!-- Phone -->
+                <div>
+                    <label for="reg-phone" class="block text-sm font-medium text-gray-300 mb-1">Phone Number</label>
+                    <input type="tel" id="reg-phone" class="form-input" placeholder="+91 98765 43210" required>
+                </div>
+                <!-- Course -->
+                <div class="md:col-span-2">
+                    <label for="reg-course" class="block text-sm font-medium text-gray-300 mb-1">Your Course</label>
+                    <select id="reg-course" class="form-input" required>
+                        <option value="">Select your course</option>
+                        <option value="btech_cse">B.Tech - CSE</option>
+                        <option value="bba">BBA</option>
+                        <option value="msc_biotech">M.Sc. - Biotechnology</option>
+                        <option value="ba_journalism">B.A. - Journalism</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <!-- Why Join -->
+                <div class="md:col-span-2">
+                    <label for="reg-why" class="block text-sm font-medium text-gray-300 mb-1">Why do you want to join? (Min. 50 characters)</label>
+                    <textarea id="reg-why" rows="4" class="form-input" placeholder="I'm excited about the unified platform..." required minlength="50"></textarea>
+                    <p id="reg-why-error" class="text-red-400 text-sm mt-1 hidden">Please enter at least 50 characters.</p>
+                </div>
+                <!-- Submit -->
+                <div class="md:col-span-2 text-center">
+                    <button type="submit" class="btn-primary w-full md:w-auto">Submit Application</button>
+                </div>
+            </form>
+            <!-- Success Modal -->
+            <div id="register-success-modal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
+                <div class="glass-card max-w-md w-full text-center p-8 relative">
+                    <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                    <div class="p-4 bg-green-500/20 rounded-full mb-4 inline-block">
+                        <i data-lucide="check-circle" class="w-12 h-12 text-green-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-white mb-2">Application Submitted!</h3>
+                    <p class="text-gray-300">Thank you, <span id="modal-user-name" class="font-bold"></span>! Your registration for Edu Revolution has been received. You can track its status in the 'Application Status' section.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Feedback Section ===== -->
+        <section id="feedback" class="py-16">
+            <h2 class="section-title">Share Your Feedback</h2>
+            <p class="section-subtitle">
+                Help us improve. Let us know what you love or what you think we can do better.
+            </p>
+            <form id="feedback-form" class="glass-card max-w-2xl mx-auto p-8 space-y-6">
+                <div>
+                    <label for="feedback-msg" class="block text-sm font-medium text-gray-300 mb-1">Your Feedback</label>
+                    <textarea id="feedback-msg" rows="4" class="form-input" placeholder="I really like the new design, but..." required></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Your Rating</label>
+                    <div class="flex space-x-2 text-3xl text-gray-500" id="star-rating">
+                        <!-- Added fill-current class -->
+                        <i data-lucide="star" class="w-8 h-8 cursor-pointer star fill-current" data-value="1"></i>
+                        <i data-lucide="star" class="w-8 h-8 cursor-pointer star fill-current" data-value="2"></i>
+                        <i data-lucide="star" class="w-8 h-8 cursor-pointer star fill-current" data-value="3"></i>
+                        <i data-lucide="star" class="w-8 h-8 cursor-pointer star fill-current" data-value="4"></i>
+                        <i data-lucide="star" class="w-8 h-8 cursor-pointer star fill-current" data-value="5"></i>
+                    </div>
+                    <input type="hidden" id="feedback-rating" value="0" required>
+                </div>
+                <button type="submit" class="btn-primary w-full">Submit Feedback</button>
+            </form>
+        </section>
+
+    </main>
+
+    <!-- ===== Footer ===== -->
+    <footer class="bg-gray-900 border-t border-white/10 mt-24">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- About -->
+                <div>
+                    <a href="#" class="flex items-center space-x-2 mb-4">
+                        <!-- Improved Logo -->
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L2 7l10 5 10-5L12 2z" class="text-indigo-400" fill="currentColor"/>
+                            <path d="M2 12l10 5 10-5" stroke-width="2" class="text-indigo-500" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M6 10v4l6 3v-4l-6-3z" class="text-fuchsia-500" fill="currentColor" opacity="0.8"/>
+                            <path d="M18 10v4l-6 3v-4l6-3z" class="text-fuchsia-500" fill="currentColor" opacity="0.8"/>
+                        </svg>
+                        <span class="text-xl font-bold text-white">Edu Revolution</span>
+                    </a>
+                    <p class="text-gray-400 text-sm">A next-generation academic portal by Lovely Professional University.</p>
+                    <div class="mt-4 bg-green-500/10 border border-green-500 rounded-lg px-4 py-2 inline-flex items-center space-x-2">
+                        <i data-lucide="award" class="w-5 h-5 text-green-400"></i>
+                        <span class="text-sm font-semibold text-green-300">NAAC A++ University</span>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h5 class="text-lg font-semibold text-white mb-4">Quick Links</h5>
+                    <ul class="space-y-2">
+                        <li><a href="#about" class="text-gray-400 hover:text-indigo-400 text-sm">About Edu Revolution</a></li>
+                        <li><a href="#courses" class="text-gray-400 hover:text-indigo-400 text-sm">My Courses</a></li>
+                        <li><a href="#success-stories" class="text-gray-400 hover:text-indigo-400 text-sm">Success Stories</a></li>
+                        <li><a href="#partners" class="text-gray-400 hover:text-indigo-400 text-sm">Partners</a></li>
+                        <li><a href="#register" class="text-gray-400 hover:text-indigo-400 text-sm">Apply Now</a></li>
+                        <li><a href="#feedback" class="text-gray-400 hover:text-indigo-400 text-sm">Provide Feedback</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Social Media (Icons already present as requested) -->
+                <div>
+                    <h5 class="text-lg font-semibold text-white mb-4">Connect with LPU</h5>
+                    <div class="flex space-x-4">
+                        <a href="https://www.facebook.com/LPUUniversity/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-indigo-400 transition-transform hover:scale-110">Facebook
+                            <i data-lucide="facebook" class="w-6 h-6"></i>
+                        </a>
+                        <br>
+                        <a href="https://twitter.com/lpuuniversity" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-indigo-400 transition-transform hover:scale-110">Twitter
+                            <i data-lucide="twitter" class="w-6 h-6"></i>
+                        </a>
+                        <br>
+                        <a href="https://www.instagram.com/lpuuniversity?igsh=Yjh1OGI5M2t1YTE2" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-indigo-400 transition-transform hover:scale-110">Instagram
+                            <i data-lucide="instagram" class="w-6 h-6"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/school/lpuuniversity/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-indigo-400 transition-transform hover:scale-110">LinkedIn
+                            <i data-lucide="linkedin" class="w-6 h-6"></i>
+                        </a>
+                        <a href="https://www.youtube.com/lpuuniversity" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-indigo-400 transition-transform hover:scale-110">Youtube
+                            <i data-lucide="youtube" class="w-6 h-6"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-white/10 text-center text-gray-500 text-sm">
+                &copy; <span id="current-year"></span> Lovely Professional University. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== AI Assistant (Chatbot) ===== -->
+    <div id="chatbot-container">
+        <!-- Chatbot Icon -->
+        <button id="chatbot-toggle-btn" class="pulse-neon fixed bottom-8 right-8 z-50 w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110">
+            <i data-lucide="bot" class="w-8 h-8 text-white"></i>
+        </button>
+
+        <!-- Chatbot Window -->
+        <div id="chatbot-window" class="hidden fixed bottom-28 right-8 z-50 w-[350px] h-[500px] glass-card !p-0 flex-col shadow-2xl overflow-hidden transition-all duration-300">
+            <!-- Header with Avatar and Name -->
+            <div class="flex justify-between items-center p-4 border-b border-white/10 bg-white/5">
+                <div class="flex items-center space-x-3">
+                    <img src="https://placehold.co/40x40/1e1b4b/a78bfa?text=R" alt="Revo Avatar" class="w-10 h-10 rounded-full border-2 border-indigo-400">
+                    <div>
+                        <h3 class="text-lg font-semibold text-white">Revo</h3>
+                        <p class="text-xs text-green-400">Online</p>
+                    </div>
+                </div>
+                <button id="chatbot-close-btn" class="text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <!-- Chat Body -->
+            <div id="chatbot-body" class="flex-1 p-4 space-y-4 overflow-y-auto scrollbar-thin scrollbar-thumb-indigo-500/50 scrollbar-track-transparent">
+                <!-- Bot Welcome Message with Name -->
+                <div class="flex justify-start">
+                    <div class="bg-gray-800 p-3 rounded-lg rounded-bl-none max-w-[80%]">
+                        <p class="text-sm text-gray-300">
+                            Hi! I'm Revo, your AI Guide. How can I help you today? You can ask about:
+                            <br>• My attendance
+                            <br>• My courses
+                            <br>• My ticket status
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chat Input -->
+            <form id="chatbot-form" class="p-4 border-t border-white/10">
+                <div class="flex space-x-2">
+                    <input type="text" id="chatbot-input" class="form-input !py-2" placeholder="Ask me something..." autocomplete="off" required>
+                    <button type="submit" class="btn-primary !py-2 !px-4">
+                        <i data-lucide="send" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- ===== JavaScript ===== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Database Simulation ---
+            let db = {};
+            
+            const defaultData = {
+                attendance: 85,
+                courses: [
+                    { id: 'c1', type: 'core', name: 'Data Structures & Algorithms', progress: 75, enrolled: true },
+                    { id: 'c2', type: 'core', name: 'Operating Systems', progress: 40, enrolled: true },
+                    { id: 'c3', type: 'core', name: 'Database Management Systems', progress: 60, enrolled: true },
+                    { id: 'nc1', type: 'non-core', name: 'Introduction to Psychology', enrolled: false },
+                    { id: 'nc2', type: 'non-core', name: 'Financial Markets', enrolled: false },
+                    { id: 'nc3', type: 'non-core', name: 'Digital Marketing', enrolled: true, progress: 90 },
+                    { id: 'nc4', type: 'non-core', name: 'Introduction to AI', enrolled: false },
+                    { id: 'nc5', type: 'non-core', name: 'Graphic Design Basics', enrolled: false },
+                    { id: 'nc6', type: 'non-core', name: 'Public Speaking', enrolled: false },
+                ],
+                certifications: [
+                    { id: 'cert1', title: 'AWS Cloud Practitioner', issuer: 'Amazon Web Services' },
+                    { id: 'cert2', title: 'Scrum Master Certified', issuer: 'Scrum Alliance' }
+                ],
+                referrals: [
+                    { id: 'r1', name: 'Ananya Sharma' },
+                    { id: 'r2', name: 'Rohan Verma' }
+                ],
+                tickets: [
+                    { id: 't1', subject: 'Fee Receipt Error', status: 'Resolved' },
+                    { id: 't2', subject: 'Course Credit Mismatch', status: 'In Progress' }
+                ],
+                user: null // To store registration data
+            };
+
+            function db_init() {
+                const savedDB = localStorage.getItem('eduRevolutionDB');
+                db = savedDB ? JSON.parse(savedDB) : JSON.parse(JSON.stringify(defaultData)); // Deep copy defaults
+                db_save();
+                renderAll();
+            }
+
+            function db_save() {
+                localStorage.setItem('eduRevolutionDB', JSON.stringify(db));
+            }
+            
+            function db_reset() {
+                localStorage.removeItem('eduRevolutionDB');
+                db_init();
+            }
+
+            // --- Selectors ---
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const coreCoursesGrid = document.getElementById('core-courses-grid');
+            const nonCoreCoursesGrid = document.getElementById('non-core-courses-grid');
+            const certForm = document.getElementById('cert-form');
+            const certList = document.getElementById('cert-list');
+            const referralList = document.getElementById('referral-list');
+            const referralCount = document.getElementById('referral-count');
+            const copyReferralBtn = document.getElementById('copy-referral-btn');
+            const ticketForm = document.getElementById('ticket-form');
+            const ticketList = document.getElementById('ticket-list');
+            const registerForm = document.getElementById('register-form');
+            const regWhyError = document.getElementById('reg-why-error');
+            const registerSuccessModal = document.getElementById('register-success-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const modalUserName = document.getElementById('modal-user-name');
+            const feedbackForm = document.getElementById('feedback-form');
+            const starRatingContainer = document.getElementById('star-rating');
+            const stars = document.querySelectorAll('.star');
+            const feedbackRatingInput = document.getElementById('feedback-rating');
+            const attendanceDisplay = document.getElementById('attendance-display');
+            const attendancePieChart = document.getElementById('attendance-pie-chart');
+            const currentYear = document.getElementById('current-year');
+            
+            // Chatbot Selectors
+            const chatbotToggleBtn = document.getElementById('chatbot-toggle-btn');
+            const chatbotWindow = document.getElementById('chatbot-window');
+            const chatbotCloseBtn = document.getElementById('chatbot-close-btn');
+            const chatbotBody = document.getElementById('chatbot-body');
+            const chatbotForm = document.getElementById('chatbot-form');
+            const chatbotInput = document.getElementById('chatbot-input');
+
+            // --- Render Functions ---
+            function renderAll() {
+                renderCourses();
+                renderCertifications();
+                renderReferrals();
+                renderTickets();
+                renderAttendanceChart();
+                currentYear.textContent = new Date().getFullYear();
+            }
+            
+            // Render Attendance Pie Chart
+            function renderAttendanceChart() {
+                const attendance = db.attendance;
+                const degrees = (attendance / 100) * 360;
+                attendanceDisplay.textContent = `${attendance}%`;
+                // Set CSS custom property for the conic gradient
+                if(attendancePieChart) {
+                    // Use requestAnimationFrame for a smooth initial animation on load
+                    requestAnimationFrame(() => {
+                        attendancePieChart.style.setProperty('--progress-deg', `${degrees}deg`);
+                    });
+                }
+            }
+
+            // Render Courses
+            function renderCourses() {
+                coreCoursesGrid.innerHTML = '';
+                nonCoreCoursesGrid.innerHTML = '';
+                
+                const coreCourses = db.courses.filter(c => c.type === 'core');
+                const nonCoreCourses = db.courses.filter(c => c.type === 'non-core');
+
+                if (coreCourses.length === 0) {
+                    coreCoursesGrid.innerHTML = '<p class="text-gray-400">No core courses assigned.</p>';
+                } else {
+                    coreCourses.forEach(course => {
+                        coreCoursesGrid.innerHTML += `
+                            <div class="glass-card !p-5">
+                                <div class="flex justify-between items-center mb-3">
+                                    <h4 class="text-lg font-semibold text-white">${course.name}</h4>
+                                    <span class="text-sm font-medium ${course.enrolled ? 'text-green-400' : 'text-gray-500'}">
+                                        ${course.enrolled ? 'Enrolled' : 'Not Enrolled'}
+                                    </span>
+                                </div>
+                                <div class="w-full bg-white/10 rounded-full h-2.5">
+                                    <div class="bg-gradient-to-r from-indigo-500 to-fuchsia-500 h-2.5 rounded-full" style="width: ${course.progress}%"></div>
+                                </div>
+                                <p class="text-right text-sm text-gray-400 mt-2">${course.progress}% Complete</p>
+                            </div>
+                        `;
+                    });
+                }
+                
+                if (nonCoreCourses.length === 0) {
+                    nonCoreCoursesGrid.innerHTML = '<p class="text-gray-400">No non-core courses available.</p>';
+                } else {
+                    nonCoreCourses.forEach(course => {
+                        nonCoreCoursesGrid.innerHTML += `
+                            <div class="glass-card !p-5 flex justify-between items-center">
+                                <div>
+                                    <h4 class="text-lg font-semibold text-white">${course.name}</h4>
+                                    ${course.enrolled ? `<p class="text-sm text-gray-400">Progress: ${course.progress || 0}%</p>` : ''}
+                                </div>
+                                <button data-id="${course.id}" class="${course.enrolled ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'btn-primary !py-2 !px-4'} font-semibold rounded-lg text-sm transition-all" ${course.enrolled ? 'disabled' : ''}>
+                                    ${course.enrolled ? 'Enrolled' : 'Enroll'}
+                                </button>
+                            </div>
+                        `;
+                    });
+                }
+            }
+
+            // Render Certifications
+            function renderCertifications() {
+                certList.innerHTML = '';
+                if (db.certifications.length === 0) {
+                    certList.innerHTML = '<div class="glass-card p-4 text-center text-gray-400">Your added certifications will appear here.</div>';
+                    return;
+                }
+                db.certifications.forEach(cert => {
+                    certList.innerHTML += `
+                        <div class="glass-card !p-5 flex justify-between items-center">
+                            <div class="flex items-center space-x-4">
+                                <div class="p-3 bg-indigo-500/20 rounded-full">
+                                    <i data-lucide="award" class="w-6 h-6 text-indigo-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-semibold text-white">${cert.title}</h4>
+                                    <p class="text-sm text-gray-400">Issued by: ${cert.issuer}</p>
+                                </div>
+                            </div>
+                            <button data-id="${cert.id}" class="delete-cert-btn text-red-500 hover:text-red-400">
+                                <i data-lucide="trash-2" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+                // Re-apply icons
+                lucide.createIcons();
+            }
+
+            // Render Referrals
+            function renderReferrals() {
+                referralList.innerHTML = '';
+                referralCount.textContent = db.referrals.length;
+                if (db.referrals.length === 0) {
+                    referralList.innerHTML = '<li class="text-gray-400">No referrals yet.</li>';
+                    return;
+                }
+                db.referrals.forEach(ref => {
+                    referralList.innerHTML += `
+                        <li class="flex items-center space-x-2 text-gray-300">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-green-400"></i>
+                            <span>${ref.name}</span>
+                        </li>
+                    `;
+                });
+                lucide.createIcons();
+            }
+
+            // Render Tickets
+            function renderTickets() {
+                ticketList.innerHTML = '';
+                if (db.tickets.length === 0) {
+                    ticketList.innerHTML = '<p class="text-gray-400 text-sm text-center">No active tickets.</p>';
+                    return;
+                }
+                db.tickets.forEach(ticket => {
+                    let statusColor = '';
+                    if (ticket.status === 'Resolved') statusColor = 'text-green-400';
+                    else if (ticket.status === 'In Progress') statusColor = 'text-yellow-400';
+                    else statusColor = 'text-fuchsia-400';
+                    
+                    ticketList.innerHTML += `
+                        <div class="flex justify-between items-center bg-white/5 p-3 rounded-lg">
+                            <div>
+                                <h5 class="font-semibold text-white">${ticket.subject}</h5>
+                                <p class="text-sm ${statusColor}">${ticket.status}</p>
+                            </div>
+                            <button data-id="${ticket.id}" class="delete-ticket-btn text-red-500 hover:text-red-400 ${ticket.status !== 'Resolved' ? 'hidden' : ''}">
+                                <i data-lucide="x-circle" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+                lucide.createIcons();
+            }
+
+            // --- Event Handlers ---
+            
+            // Mobile Menu Toggle
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Close mobile menu on link click
+            mobileMenu.addEventListener('click', (e) => {
+                if(e.target.tagName === 'A') {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+
+            // Smooth scroll for nav links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Handle Course Enrollment
+            nonCoreCoursesGrid.addEventListener('click', (e) => {
+                const btn = e.target.closest('button');
+                if (btn && !btn.disabled) {
+                    const courseId = btn.dataset.id;
+                    const course = db.courses.find(c => c.id === courseId);
+                    if (course) {
+                        course.enrolled = true;
+                        course.progress = 0; // Set initial progress
+                        db_save();
+                        renderCourses();
+                    }
+                }
+            });
+
+            // Handle Add Certification
+            certForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const title = document.getElementById('cert-title').value;
+                const issuer = document.getElementById('cert-issuer').value;
+                
+                db.certifications.push({
+                    id: `cert${Date.now()}`,
+                    title,
+                    issuer
+                });
+                db_save();
+                renderCertifications();
+                certForm.reset();
+            });
+            
+            // Handle Delete Certification
+            certList.addEventListener('click', (e) => {
+                const btn = e.target.closest('.delete-cert-btn');
+                if (btn) {
+                    const certId = btn.dataset.id;
+                    db.certifications = db.certifications.filter(c => c.id !== certId);
+                    db_save();
+                    renderCertifications();
+                }
+            });
+
+            // Handle Copy Referral Code
+            copyReferralBtn.addEventListener('click', () => {
+                const codeInput = document.getElementById('referral-code');
+                navigator.clipboard.writeText(codeInput.value).then(() => {
+                    copyReferralBtn.innerHTML = `<i data-lucide="check" class="w-5 h-5"></i>`;
+                    lucide.createIcons();
+                    setTimeout(() => {
+                        copyReferralBtn.innerHTML = `<i data-lucide="copy" class="w-5 h-5"></i>`;
+                        lucide.createIcons();
+                    }, 2000);
+                });
+            });
+
+            // Handle Add Ticket
+            ticketForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const subject = document.getElementById('ticket-subject').value;
+                
+                db.tickets.push({
+                    id: `t${Date.now()}`,
+                    subject: subject,
+                    status: 'Open'
+                });
+                db_save();
+                renderTickets();
+                ticketForm.reset();
+            });
+
+            // Handle Delete/Close Ticket
+            ticketList.addEventListener('click', (e) => {
+                const btn = e.target.closest('.delete-ticket-btn');
+                if (btn) {
+                    const ticketId = btn.dataset.id;
+                    db.tickets = db.tickets.filter(t => t.id !== ticketId);
+                    db_save();
+                    renderTickets();
+                }
+            });
+
+            // Handle Registration Form
+            registerForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const whyText = document.getElementById('reg-why').value;
+                
+                if (whyText.length < 50) {
+                    regWhyError.classList.remove('hidden');
+                    return;
+                }
+                
+                regWhyError.classList.add('hidden');
+                
+                const name = document.getElementById('reg-name').value;
+                db.user = {
+                    name: name,
+                    email: document.getElementById('reg-email').value,
+                    studentId: document.getElementById('reg-id').value,
+                };
+                db_save();
+                
+                modalUserName.textContent = name;
+                registerSuccessModal.classList.remove('hidden');
+                registerForm.reset();
+            });
+
+            closeModalBtn.addEventListener('click', () => {
+                registerSuccessModal.classList.add('hidden');
+            });
+            
+            // Handle Feedback Stars
+            starRatingContainer.addEventListener('mouseover', (e) => {
+                if (e.target.classList.contains('star')) {
+                    const value = e.target.dataset.value;
+                    stars.forEach(star => {
+                        star.classList.toggle('text-yellow-400', star.dataset.value <= value);
+                        star.classList.toggle('text-gray-500', star.dataset.value > value);
+                    });
+                }
+            });
+            
+            starRatingContainer.addEventListener('mouseleave', () => {
+                const rating = feedbackRatingInput.value;
+                stars.forEach(star => {
+                    star.classList.toggle('text-yellow-400', star.dataset.value <= rating);
+                    star.classList.toggle('text-gray-500', star.dataset.value > rating);
+                });
+            });
+
+            starRatingContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('star')) {
+                    feedbackRatingInput.value = e.target.dataset.value;
+                }
+            });
+            
+            // Handle Feedback Form
+            feedbackForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const feedbackMsg = document.getElementById('feedback-msg').value;
+                const rating = feedbackRatingInput.value;
+                
+                if (rating === "0") {
+                    // Using a custom modal/alert would be better, but alert is fine for this demo
+                    alert("Please provide a star rating.");
+                    return;
+                }
+                
+                // Here you would send this to a server
+                console.log("Feedback Submitted:", { rating, feedbackMsg });
+                
+                feedbackForm.reset();
+                feedbackRatingInput.value = "0";
+                stars.forEach(star => {
+                    star.classList.add('text-gray-500');
+                    star.classList.remove('text-yellow-400');
+                });
+                
+                // Show custom confirmation
+                alert("Thank you for your feedback!");
+            });
+
+            // --- AI Assistant Logic ---
+            chatbotToggleBtn.addEventListener('click', () => {
+                chatbotWindow.classList.toggle('hidden');
+            });
+            chatbotCloseBtn.addEventListener('click', () => {
+                chatbotWindow.classList.add('hidden');
+            });
+
+            chatbotForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const userInput = chatbotInput.value.trim();
+                if (userInput === "") return;
+                
+                addChatMessage('user', userInput);
+                chatbotInput.value = '';
+                
+                // Show bot typing indicator
+                setTimeout(() => {
+                    const botResponse = getBotResponse(userInput);
+                    addChatMessage('bot', botResponse);
+                }, 1000);
+            });
+            
+            function addChatMessage(sender, message) {
+                const msgHtml = `
+                    <div class="flex ${sender === 'user' ? 'justify-end' : 'justify-start'}">
+                        <div class="${sender === 'user' ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-gray-800 text-gray-300 rounded-bl-none'} p-3 rounded-lg max-w-[80%]">
+                            <p class="text-sm">${message}</p>
+                        </div>
+                    </div>
+                `;
+                chatbotBody.innerHTML += msgHtml;
+                chatbotBody.scrollTop = chatbotBody.scrollHeight;
+            }
+
+            function getBotResponse(input) {
+                const text = input.toLowerCase();
+                
+                if (text.includes('hello') || text.includes('hi')) {
+                    return "Hello! I'm Revo, your AI Guide. How can I assist you with your courses, attendance, or tickets?";
+                }
+                
+                if (text.includes('attendance')) {
+                    return `Your current attendance is <strong>${db.attendance}%</strong>. Keep it up!`;
+                }
+                
+                if (text.includes('course')) {
+                    const enrolled = db.courses.filter(c => c.enrolled);
+                    let response = `You are currently enrolled in ${enrolled.length} courses: <ul class="list-disc list-inside mt-2">`;
+                    enrolled.forEach(c => {
+                        response += `<li>${c.name} (${c.progress}% complete)</li>`;
+                    });
+                    response += "</ul>";
+                    return response;
+                }
+                
+                if (text.includes('ticket') || text.includes('query')) {
+                    const openTickets = db.tickets.filter(t => t.status.toLowerCase() !== 'resolved');
+                    if (openTickets.length === 0) {
+                        return "You have no open support tickets. All issues are resolved!";
+                    }
+                    let response = `You have ${openTickets.length} open ticket(s): <ul class="list-disc list-inside mt-2">`;
+                    openTickets.forEach(t => {
+                        response += `<li><strong>${t.subject}</strong> (Status: ${t.status})</li>`;
+                    });
+                    response += "</ul>";
+                    return response;
+                }
+                
+                if (text.includes('thank')) {
+                    return "You're welcome! Is there anything else I can help with?";
+                }
+
+                return "I'm sorry, I can only provide information about attendance, courses, and support tickets. Please rephrase your question.";
+            }
+
+            // --- Initial Load ---
+            db_init();
+            lucide.createIcons(); // Initial icon render
+        });
+    </script>
+</body>
+</html>
